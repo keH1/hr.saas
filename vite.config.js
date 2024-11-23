@@ -8,4 +8,12 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    server: {
+        host: '0.0.0.0',
+        origin: process.env.VITE_DEV_SERVER || 'https://vite.hr.saas',
+        port: process.env.VITE_PORT || 5173,
+        strictPort: true,
+        https: false,
+    },
+    logLevel: 'info',
 });

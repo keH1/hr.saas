@@ -1,0 +1,139 @@
+services:
+  mkcert:
+    environment:
+      - domain=*.hr.saas,hr.saas
+    container_name: mkcert
+    volumes:
+      - "./.docker/local/traefik/ssl:/root/.local/share/mkcert"
+    image: vishnunair/docker-mkcert
+    labels:
+      - "traefik.enable=false"
+    networks:
+      - default
+      - project
+
+  traefik:
+    build:
+      context: .
+      dockerfile: .docker/local/traefik/Dockerfile
+    container_name: traefik
+    command:
+      - "--configFile=/etc/traefik/traefik.yml"
+    depends_on:
+      - nginx
+    image: ${CI_REGISTRY}/${CI_PROJECT_PATH}/${ENVIRONMENT_NAME}/traefik
+    ports:
+      - "80:80"
+      - "443:443"
+      - "${VITE_PORT:-5173}:${VITE_PORT:-5173}"
+      - "8080:8080"
+    restart: always
+    volumes:
+      - "./.docker/local/traefik/traefik.yml:/etc/traefik/traefik.yml:ro"
+      - "./.docker/local/traefik/dynamic.yml:/etc/traefik/dynamic.yml:ro"
+      - "./.docker/local/traefik/ssl:/etc/traefik/ssl:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - default
+      - project
+
+  php:
+    build:
+      context: .
+      dockerfile: .docker/local/php/Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      PHP_IDE_CONFIG: serverName=${PHP_IDE_CONFIG_SERVER_NAME}
+      POSTGRES_HOSTNAME: ${POSTGRES_HOSTNAME}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    hostname: api.${PROJECT_NAME}.local
+    image: ${CI_REGISTRY}/${CI_PROJECT_PATH}/local/php
+    labels:
+      - "traefik.enable=false"
+    volumes:
+      - "./:/var/www/html"
+      - "./.data/composer:/root/.composer"
+    networks:
+      - project
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: .docker/local/php/Dockerfile
+    depends_on:
+      - php
+    environment:
+      PHP_IDE_CONFIG: serverName=${PHP_IDE_CONFIG_SERVER_NAME}
+      POSTGRES_HOSTNAME: ${POSTGRES_HOSTNAME}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    image: ${CI_REGISTRY}/${CI_PROJECT_PATH}/local/scheduler
+    command: ["php", "artisan", "schedule:work"]
+    labels:
+      - "traefik.enable=false"
+    volumes:
+      - "./:/var/www/html"
+      - "./.data/composer:/root/.composer"
+    networks:
+      - project
+
+  nginx:
+    build:
+      context: .
+      dockerfile: .docker/local/nginx/Dockerfile
+    depends_on:
+      - php
+    image: ${CI_REGISTRY}/${CI_PROJECT_PATH}/local/nginx
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.${TRAEFIK_ROUTER_PREFIX}.rule=Host(`${PROJECT_DOMAIN}`) || HostRegexp(`{subdomain:[a-z0-9-]+}\\.hr\\.saas`)'
+      - 'traefik.http.routers.${TRAEFIK_ROUTER_PREFIX}.entrypoints=websecure'
+      - 'traefik.http.routers.${TRAEFIK_ROUTER_PREFIX}.tls=true'
+    volumes:
+      - "./:/var/www/html"
+      - "./.docker/local/nginx/etc/default.conf:/etc/nginx/conf.d/default.conf"
+    networks:
+      - default
+      - project
+
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    hostname: ${POSTGRES_HOSTNAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - "./.data/postgres:/var/lib/postgresql/data"
+    networks:
+      - project
+
+  node:
+    build:
+      context: .
+      dockerfile: .docker/local/node/Dockerfile
+    environment:
+      VITE_PORT: ${VITE_PORT:-5173}
+    image: ${CI_REGISTRY}/${CI_PROJECT_PATH}/local/node
+    command: ["npm", "run", "dev", "--host"]
+#    ports:
+#      - "${VITE_PORT:-5173}:${VITE_PORT:-5173}"
+    volumes:
+      - "./:/var/www/html"
+      - "./.data/node:/root/.npm"
+    networks:
+      - default
+      - project
+
+networks:
+  default:
+  project:
+    internal: true

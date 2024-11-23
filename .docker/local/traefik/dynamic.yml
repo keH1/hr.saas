@@ -1,0 +1,6 @@
+tls:
+  certificates:
+    - certFile: /etc/traefik/ssl/_wildcard.hr.saas.pem
+      keyFile: /etc/traefik/ssl/_wildcard.hr.saas-key.pem
+    - certFile: /etc/traefik/ssl/hr.saas.pem
+      keyFile: /etc/traefik/ssl/hr.saas-key.pem
