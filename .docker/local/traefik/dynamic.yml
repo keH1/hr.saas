@@ -4,3 +4,8 @@ tls:
       keyFile: /etc/traefik/ssl/_wildcard.hr.saas-key.pem
     - certFile: /etc/traefik/ssl/hr.saas.pem
       keyFile: /etc/traefik/ssl/hr.saas-key.pem
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/traefik/ssl/hr.saas.pem
+        keyFile: /etc/traefik/ssl/hr.saas-key.pem

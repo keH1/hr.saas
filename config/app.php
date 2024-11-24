@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => str_replace('${PROJECT_DOMAIN}', env('PROJECT_DOMAIN', 'localhost'), env('APP_URL', 'https://localhost')),
 
     /*
     |--------------------------------------------------------------------------
