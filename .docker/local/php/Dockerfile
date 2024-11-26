@@ -38,6 +38,9 @@ RUN apk add libzip-dev \
 # Install PDO
 RUN docker-php-ext-install -j$(nproc) pdo_pgsql
 
+# Install Exif extension
+RUN docker-php-ext-install -j$(nproc) exif
+
 # Install MySQLi extension
 #RUN docker-php-ext-install -j$(nproc) mysqli
 
