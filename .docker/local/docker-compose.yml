@@ -134,6 +134,7 @@ services:
     volumes:
       - "./.data/postgres:/var/lib/postgresql/data"
     networks:
+      - proxy
       - backend
 
   vite:
