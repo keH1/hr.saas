@@ -6,12 +6,17 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
+        "ext-intl": "*",
         "inertiajs/inertia-laravel": "^1.0",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "propaganistas/laravel-phone": "^5.3",
+        "spatie/laravel-data": "^4.11",
         "spatie/laravel-medialibrary": "^11.10",
         "spatie/laravel-permission": "^6.10",
+        "spatie/laravel-typescript-transformer": "^2.5",
+        "spatie/typescript-transformer": "*",
         "stancl/tenancy": "^3.8",
         "tightenco/ziggy": "^2.0"
     },
