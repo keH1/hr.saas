@@ -3,6 +3,7 @@
 namespace App\Models\Central;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Propaganistas\LaravelPhone\Casts\E164PhoneNumberCast;
@@ -48,5 +49,9 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function gardeners(): HasMany
+    {
+        return $this->HasMany(Gardener::class);
     }
 }
