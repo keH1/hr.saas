@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Tenant\LogoutController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Stancl\Tenancy\Features\UserImpersonation;
