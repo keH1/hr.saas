@@ -29,7 +29,7 @@ Route::middleware([
 ])->group(function () {
     Route::middleware('auth:tenant')->group(function () {
         Route::get('/dashboard', function () {
-            return Inertia::render('Dashboard');
+            return Inertia::render('Tenant/Dashboard');
         })->name('dashboard');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

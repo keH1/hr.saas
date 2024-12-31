@@ -23,6 +23,7 @@ export default {
         container: {
             screens: {
                 "2xl": "1320px",
+                "3xl": "1600px",
             },
         },
         extend: {

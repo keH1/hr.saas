@@ -1,4 +1,3 @@
-import {route} from "ziggy-js";
 import {useEffect, useState} from "react";
 import MenuItem from "@/Components/MainMenu/MenuItem";
 import {usePage} from "@inertiajs/react";
