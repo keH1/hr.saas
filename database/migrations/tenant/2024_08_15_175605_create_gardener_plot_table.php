@@ -11,8 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('gardener_id')->constrained('gardeners')->onDelete('cascade');
             $table->foreignId('plot_id')->constrained('plots')->onDelete('cascade');
-            $table->decimal('ownership_percentage', 1,3);
-            $table->float('debt');
+            $table->decimal('ownership_percentage', 5);
             $table->timestamps();
         });
     }

@@ -2,12 +2,14 @@
 
 namespace App\Models\Tenant;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Plot extends Model
 {
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -25,14 +27,16 @@ class Plot extends Model
      */
     public function street(): BelongsTo
     {
-        return $this->BelongsTo(Street::class);
+        return $this->belongsTo(Street::class);
     }
 
     /**
      * @return BelongsToMany
      */
-    public function gardeners(): BelongsToMany
+    public function owners(): BelongsToMany
     {
-        return $this->BelongsToMany(Gardener::class,'gardener_plot');
+        return $this->belongsToMany(Gardener::class, 'gardener_plot')
+                    ->withPivot('ownership_percentage')
+                    ->withTimestamps();
     }
 }

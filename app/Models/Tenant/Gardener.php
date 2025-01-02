@@ -2,13 +2,14 @@
 
 namespace App\Models\Tenant;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Gardener extends Model
 {
-
+    use HasFactory;
     /**
      * The attributes that are mass assignable.
      *
@@ -18,23 +19,23 @@ class Gardener extends Model
         'last_name',
         'first_name',
         'middle_name',
-        'real_address',
+        'residence_address',
         'mailing_address',
+        'is_member'
     ];
-
-    /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->BelongsTo(User::class);
-    }
 
     /**
      * @return BelongsToMany
      */
     public function plots(): BelongsToMany
     {
-        return $this->BelongsToMany(Plot::class,'gardener_plot');
+        return $this->belongsToMany(Plot::class, 'gardener_plot')
+                    ->withPivot('ownership_percentage')
+                    ->withTimestamps();
+    }
+
+    public function contacts(): MorphToMany
+    {
+        return $this->morphToMany(Contact::class, 'contactable');
     }
 }
