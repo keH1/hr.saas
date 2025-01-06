@@ -25,7 +25,7 @@ class RegisterTenantController extends Controller
      */
     public function registerPage(): Response
     {
-        return Inertia::render('Auth/Register');
+        return Inertia::render('Central/Auth/Register');
     }
 
     public function create(Request $request)
