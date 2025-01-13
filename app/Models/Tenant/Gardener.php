@@ -24,6 +24,14 @@ class Gardener extends Model
         'is_member'
     ];
 
+    protected $hidden = ['pivot'];
+    protected $appends = ['ownership_percentage'];
+
+    public function getOwnershipPercentageAttribute(): ?string
+    {
+        return $this->pivot ? $this->pivot->ownership_percentage : null;
+    }
+
     /**
      * @return BelongsToMany
      */

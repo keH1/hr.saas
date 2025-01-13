@@ -1,13 +1,11 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import darkModeReducer from "@/Stores/darkModeSlice";
-import perPageSlice from "@/Stores/perPageSlice";
 import compactMenuReducer from "./compactMenuSlice";
 
 export const store = configureStore({
     reducer: {
         darkMode: darkModeReducer,
         compactMenu: compactMenuReducer,
-        perPage: perPageSlice,
     },
 });
 

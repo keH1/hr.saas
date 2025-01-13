@@ -290,10 +290,10 @@ export default function App({children}: PropsWithChildren) {
                   </Menu.Button>
                   <Menu.Items className="w-56 mt-1">
                     <Menu.Item href=''
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setSwitchAccount(true);
-                      }}
+                               onClick={(e) => {
+                                 e.preventDefault();
+                                 setSwitchAccount(true);
+                               }}
                     >
                       <Lucide icon="ToggleLeft"
                               className="w-4 h-4 mr-2" />
@@ -321,10 +321,12 @@ export default function App({children}: PropsWithChildren) {
                               className="w-4 h-4 mr-2" />
                       Profile Info
                     </Menu.Item>
-                    <Menu.Item href={route('logout')} method='post' as='button'>
-                        <Lucide icon="Power"
-                                className="w-4 h-4 mr-2" />
-                        Logout
+                    <Menu.Item href={route('logout')}
+                               method='post'
+                               as='button'>
+                      <Lucide icon="Power"
+                              className="w-4 h-4 mr-2" />
+                      Logout
                     </Menu.Item>
                   </Menu.Items>
                 </Menu>

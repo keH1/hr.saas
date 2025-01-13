@@ -20,7 +20,7 @@ class MainMenuService
             ],
             [
                 "icon" => "LandPlot",
-                "pathname" => route('dashboard'),
+                "pathname" => route('plots.list'),
                 "name" => "plots.*",
                 "title" => __('tenant/menu.plots'),
             ],

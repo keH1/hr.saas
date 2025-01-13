@@ -41,6 +41,11 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
+            'listPageProps' => [
+                'defaultPerPage' => config('app.defaults.list_settings.per_page'),
+                'defaultOnPage' => config('app.defaults.list_settings.on_page'),
+            ],
+            'queryParams' => $request->query()
         ];
     }
 }

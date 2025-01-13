@@ -21,7 +21,7 @@ function Pagination({className, children}: PaginationProps) {
 }
 
 interface LinkProps extends React.PropsWithChildren, React.ComponentPropsWithoutRef<"li"> {
-  href?: string;
+  href?: string | null;
   active?: boolean;
 }
 

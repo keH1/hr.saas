@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Tenant\LogoutController;
+use App\Http\Controllers\Tenant\PlotsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Stancl\Tenancy\Features\UserImpersonation;
@@ -31,6 +32,9 @@ Route::middleware([
         Route::get('/dashboard', function () {
             return Inertia::render('Tenant/Dashboard');
         })->name('dashboard');
+
+        //Plots
+        Route::get('/plots', [PlotsController::class, 'index'])->name('plots.list');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

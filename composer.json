@@ -10,6 +10,7 @@
         "inertiajs/inertia-laravel": "^1.0",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
+        "laravel/scout": "^10.11",
         "laravel/tinker": "^2.9",
         "propaganistas/laravel-phone": "^5.3",
         "spatie/laravel-data": "^4.11",

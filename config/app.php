@@ -123,4 +123,14 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'defaults' => [
+        'list_settings' => [
+            'per_page' => 25,
+            'on_page' => [
+                25,
+                50,
+                100,
+            ],
+        ]
+    ]
 ];
