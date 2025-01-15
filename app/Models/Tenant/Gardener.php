@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Laravel\Scout\Searchable;
 
 class Gardener extends Model
 {
     use HasFactory;
+    use Searchable;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -25,11 +28,20 @@ class Gardener extends Model
     ];
 
     protected $hidden = ['pivot'];
-    protected $appends = ['ownership_percentage'];
+    protected $appends = ['ownership_percentage', 'primary_contact'];
 
     public function getOwnershipPercentageAttribute(): ?string
     {
         return $this->pivot ? $this->pivot->ownership_percentage : null;
+    }
+
+    public function getPrimaryContactAttribute(): ?Contact
+    {
+        if ($this->relationLoaded('contacts')) {
+            return $this->contacts()->where('is_primary', true)->first();
+        }
+
+        return $this->contacts()->where('is_primary', true)->first();
     }
 
     /**
@@ -45,5 +57,14 @@ class Gardener extends Model
     public function contacts(): MorphToMany
     {
         return $this->morphToMany(Contact::class, 'contactable');
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'middle_name' => $this->middle_name,
+        ];
     }
 }

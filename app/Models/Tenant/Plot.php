@@ -14,7 +14,6 @@ class Plot extends Model
     use HasFactory;
     use Searchable;
 
-
     /**
      * The attributes that are mass assignable.
      *

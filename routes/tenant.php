@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Tenant\GardenersController;
 use App\Http\Controllers\Tenant\LogoutController;
 use App\Http\Controllers\Tenant\PlotsController;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,9 @@ Route::middleware([
 
         //Plots
         Route::get('/plots', [PlotsController::class, 'index'])->name('plots.list');
+
+        //Gardeners
+        Route::get('/gardeners', [GardenersController::class, 'index'])->name('gardeners.list');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

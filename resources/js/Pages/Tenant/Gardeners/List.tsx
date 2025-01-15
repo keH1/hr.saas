@@ -1,0 +1,143 @@
+import AppLayout from "@/Layouts/Tenant/AppLayout";
+import {Head, Link} from '@inertiajs/react';
+import React from "react";
+
+import Lucide from "@/Components/Base/Lucide";
+import {FormCheck} from "@/Components/Base/Form";
+import Tippy from "@/Components/Base/Tippy";
+import Button from "@/Components/Base/Button";
+import Table from "@/Components/Base/Table";
+import {PageProps} from "@/types";
+import {DataTable} from "@/Components/DataTable";
+import clsx from "clsx";
+import PageWidgets = App.Data.Tenant.Frontend.Widgets.PageWidgets;
+import Gardeners = App.Data.Tenant.Frontend.Table.Gardeners;
+
+interface GardenersList extends PageProps {
+  gardeners: Gardeners;
+  total?: PageWidgets;
+}
+
+export default function List({gardeners, total}: GardenersList) {
+  return (
+    <AppLayout>
+      <Head title="Садоводы" />
+
+      <div className="grid grid-cols-12 gap-y-10 gap-x-6">
+        <div className="col-span-12">
+          <div className="flex flex-col md:h-10 gap-y-3 md:items-center md:flex-row">
+            <div className="text-base font-medium group-[.mode--light]:text-white">
+              Садоводы
+            </div>
+            <div className="flex flex-col sm:flex-row gap-x-3 gap-y-2 md:ml-auto">
+              <Button
+                as={Link}
+                href={route('dashboard')}
+                variant="primary"
+                className="group-[.mode--light]:!bg-white/[0.12] group-[.mode--light]:!text-slate-200 group-[.mode--light]:!border-transparent"
+              >
+                <Lucide icon="PenLine"
+                        className="stroke-[1.3] w-4 h-4 mr-2" />{" "}
+                Добавить садовода
+              </Button>
+            </div>
+          </div>
+          <DataTable links={gardeners.links} total={total}>
+            <Table className="border-b border-slate-200/60">
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Td className="w-5 py-4 font-medium border-t bg-slate-50 border-slate-200/60 text-slate-500">
+                    <FormCheck.Input type="checkbox" />
+                  </Table.Td>
+                  <Table.Td className="py-4 font-medium border-t bg-slate-50 border-slate-200/60 text-slate-500">
+                    Имя
+                  </Table.Td>
+                  <Table.Td className="py-4 font-medium border-t bg-slate-50 border-slate-200/60 text-slate-500">
+                    Контактные данные
+                  </Table.Td>
+                  <Table.Td className="py-4 font-medium text-center border-t bg-slate-50 border-slate-200/60 text-slate-500">
+                    Членство
+                  </Table.Td>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {gardeners.data && gardeners.data.map((gardener, key) => (
+                  <Table.Tr key={key}
+                            className="[&_td]:last:border-b-0">
+                    <Table.Td className="py-4 border-dashed dark:bg-darkmode-600">
+                      <FormCheck.Input type="checkbox" />
+                    </Table.Td>
+                    <Table.Td className="py-4 border-dashed w-80 dark:bg-darkmode-600">
+                      <div className="flex items-center">
+                        <div className="w-9 h-9 image-fit zoom-in">
+                          <Tippy
+                            as="img"
+                            alt="Tailwise - Admin Dashboard Template"
+                            className="rounded-full shadow-[0px_0px_0px_2px_#fff,_1px_1px_5px_rgba(0,0,0,0.32)] dark:shadow-[0px_0px_0px_2px_#3f4865,_1px_1px_5px_rgba(0,0,0,0.32)]"
+                            src="https://vite.hr.saas/public/images/users/user8-50x50.jpg"
+                            content={gardener.first_name}
+                          />
+                        </div>
+                        <div className="ml-3.5">
+                          <Link
+                            href={route('dashboard', gardener.id)}
+                            className="font-medium whitespace-nowrap"
+                          >
+                            {gardener.last_name} {gardener.first_name} {gardener.middle_name}
+                          </Link>
+                          <div className="text-slate-500 text-xs whitespace-nowrap mt-0.5">
+                            ул. {gardener.plots && gardener.plots[0].street.name} {gardener.plots && gardener.plots[0].plot_number}
+                          </div>
+                        </div>
+                      </div>
+                    </Table.Td>
+                    <Table.Td className="py-4 border-dashed dark:bg-darkmode-600">
+                      <a href=""
+                         className="font-medium whitespace-nowrap">
+                        {(gardener.primary_contact ? gardener.primary_contact.value : 'Телефон не найден')}
+                      </a>
+                      <div className="text-slate-500 text-xs whitespace-nowrap mt-0.5">
+                        {gardener.mailing_address}
+                      </div>
+                    </Table.Td>
+                    <Table.Td className="py-4 border-dashed dark:bg-darkmode-600">
+                      {(gardener.is_member) ?
+                        <div
+                          className={clsx([
+                            "flex items-center justify-center text-success"
+                          ])}
+                        >
+                          <Lucide
+                            icon="Database"
+                            className="w-3.5 h-3.5 stroke-[1.7]"
+                          />
+                          <div className="ml-1.5 whitespace-nowrap">
+                            Да
+                          </div>
+                        </div>
+                        :
+                        <div
+                          className={clsx([
+                            "flex items-center justify-center text-danger"
+                          ])}
+                        >
+                          <Lucide
+                            icon="Database"
+                            className="w-3.5 h-3.5 stroke-[1.7]"
+                          />
+                          <div className="ml-1.5 whitespace-nowrap">
+                            Нет
+                          </div>
+                        </div>
+                      }
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          </DataTable>
+        </div>
+      </div>
+    </AppLayout>
+  );
+}

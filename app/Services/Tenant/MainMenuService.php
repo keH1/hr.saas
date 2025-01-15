@@ -26,7 +26,7 @@ class MainMenuService
             ],
             [
                 "icon" => "SquareUser",
-                "pathname" => route('dashboard'),
+                "pathname" => route('gardeners.list'),
                 "name" => "gardeners.*",
                 "title" => __('tenant/menu.gardeners'),
             ],
