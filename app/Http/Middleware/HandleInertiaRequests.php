@@ -36,6 +36,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'dadataToken' => config('app.dadata_token'),
             'mainMenu' => new MainMenuService()->menu,
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),

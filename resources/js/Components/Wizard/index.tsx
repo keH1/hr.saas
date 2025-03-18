@@ -1,15 +1,17 @@
-import React, {useState, ReactNode} from 'react';
-import {ErrorMessage, Field, Form, Formik, FormikHelpers, FormikProps, useFormik} from 'formik';
+import React, {ReactNode, useState} from 'react';
+import {Form, Formik, FormikHelpers, FormikProps} from 'formik';
 import * as Yup from 'yup';
 import clsx from "clsx";
 import Button from "@/Components/Base/Button";
 import Lucide from "@/Components/Base/Lucide";
+import LoadingIcon from "@/Components/Base/LoadingIcon";
 
 interface WizardStepProps {
   name: string;
   children: ReactNode;
   validationSchema?: Yup.AnyObjectSchema;
   onSubmit?: (values: any, helpers: FormikHelpers<any>) => void;
+  extraActions?: (formik: FormikProps<any>) => React.ReactNode;
 }
 
 interface WizardProps {
@@ -44,16 +46,10 @@ export const Wizard: React.FC<WizardProps> = ({children, initialValues, onSubmit
     if (isLastStep) {
       return onSubmit(values, helpers);
     } else {
-      helpers.setTouched({});
+      await helpers.setTouched({});
       next(values);
     }
   };
-
-  const formik = useFormik({
-    initialValues: snapshot,
-    validationSchema: step.props.validationSchema,
-    onSubmit: handleSubmit,
-  });
 
   return (
     <div className="grid grid-cols-12 gap-y-10 gap-x-6">
@@ -88,84 +84,59 @@ export const Wizard: React.FC<WizardProps> = ({children, initialValues, onSubmit
 
         <div className="mt-7">
           <div className="flex flex-col box box--stacked">
-            <form onSubmit={formik.handleSubmit}>
-              <div className="p-7">
-                {step}
-              </div>
-              <div className="flex py-5 border-t md:justify-between px-7 border-slate-200/80">
-                {currentStep > 1 && (
-                  <Button
-                    variant="outline-primary"
-                    className="w-full px-10 md:w-auto border-primary/50"
-                    onClick={prevStep}
-                  >
-                    <Lucide
-                      icon="Pocket"
-                      className="stroke-[1.3] w-4 h-4 mr-2 -ml-2"
-                    />
-                    Назад
-                  </Button>
-                )}
-                {currentStep < 3 && (
-                  <Button
-                    variant="outline-primary"
-                    className="w-full px-10 md:w-auto border-primary/50 ml-auto"
-                    onClick={nextStep}
-                  >
-                    <Lucide
-                      icon="Pocket"
-                      className="stroke-[1.3] w-4 h-4 mr-2 -ml-2"
-                    />
-                    Далее
-                  </Button>
-                )}
-                {currentStep === 3 && (
-                  <Button
-                    variant="outline-primary"
-                    className="w-full px-10 md:w-auto border-primary/50 ml-auto"
-                    type="submit"
-                  >
-                    <Lucide
-                      icon="Pocket"
-                      className="stroke-[1.3] w-4 h-4 mr-2 -ml-2"
-                    />
-                    Создать
-                  </Button>
-                )}
-              </div>
-            </form>
+            <Formik initialValues={snapshot}
+                    onSubmit={handleSubmit}
+                    validationSchema={step.props.validationSchema}>
+              {formik => (
+                <Form>
+                  <div className="p-7">
+                    {step}
+                  </div>
+                  <div className="flex py-5 border-t md:justify-between px-7 border-slate-200/80">
+                    <div className="flex items-center">
+                      {stepNumber > 0 && (
+                        <Button
+                          disabled={formik.isSubmitting}
+                          variant="outline-primary"
+                          className="w-full px-10 md:w-auto border-primary/50"
+                          onClick={previous}
+                          type="button"
+                        >
+                          <Lucide
+                            icon="ArrowLeftCircle"
+                            className="stroke-[1.3] w-4 h-4 mr-2 -ml-2"
+                          />
+                          Назад
+                        </Button>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {step.props.extraActions && step.props.extraActions(formik)}
+                      <Button
+                        disabled={formik.isSubmitting}
+                        variant="outline-primary"
+                        className="w-full px-10 md:w-auto border-primary/50 ml-auto"
+                        type="submit"
+                      >
+                        {formik.isSubmitting ? (
+                          <LoadingIcon icon="oval" color="#03045e" className="stroke-[1.3] w-4 h-4 mr-2 -ml-2" />
+                        ) : (
+                          <Lucide
+                            icon={isLastStep ? 'Send' : 'ArrowRightCircle'}
+                            className="stroke-[1.3] w-4 h-4 mr-2 -ml-2"
+                          />
+                        )}
+                        {isLastStep ? 'Создать' : 'Далее'}
+                      </Button>
+                    </div>
+                  </div>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
       </div>
     </div>
-    /*<Formik
-      initialValues={snapshot}
-      onSubmit={handleSubmit}
-      validationSchema={step.props.validationSchema}
-    >
-      {(formik: FormikProps<any>) => (
-        <Form>
-          <p>
-            Step {stepNumber + 1} of {totalSteps}
-          </p>
-          {step}
-          <div style={{display: 'flex'}}>
-            {stepNumber > 0 && (
-              <button onClick={() => previous(formik.values)}
-                      type="button">
-                Back
-              </button>
-            )}
-            <div>
-              <button disabled={formik.isSubmitting}
-                      type="submit">
-                {isLastStep ? 'Submit' : 'Next'}
-              </button>
-            </div>
-          </div>
-        </Form>
-      )}
-    </Formik>*/
   );
 };
 

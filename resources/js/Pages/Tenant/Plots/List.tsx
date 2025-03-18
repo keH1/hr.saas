@@ -31,7 +31,7 @@ export default function List({plots, total}: PlotsList) {
             <div className="flex flex-col sm:flex-row gap-x-3 gap-y-2 md:ml-auto">
               <Button
                 as={Link}
-                href={route('dashboard')}
+                href={route('plots.create')}
                 variant="primary"
                 className="group-[.mode--light]:!bg-white/[0.12] group-[.mode--light]:!text-slate-200 group-[.mode--light]:!border-transparent"
               >
@@ -85,7 +85,7 @@ export default function List({plots, total}: PlotsList) {
                         </div>
                         <div className="ml-3.5">
                           <Link
-                            href={route('dashboard')}
+                            href={route('plots.edit', plot.id)}
                             className="font-medium whitespace-nowrap"
                           >
                             {plot.owners && plot.owners.length > 0 && (

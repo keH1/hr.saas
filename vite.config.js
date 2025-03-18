@@ -18,11 +18,15 @@ export default defineConfig({
         port: process.env.VITE_PORT || 5173,
         strictPort: true,
         https: false,
+        cors: {
+            origin: true,
+            credentials: true,
+        },
     },
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'resources/js'),
-            '@/css': path.resolve(__dirname, 'resources/css')
+            '@css': path.resolve(__dirname, 'resources/css')
         }
     },
     logLevel: 'info',

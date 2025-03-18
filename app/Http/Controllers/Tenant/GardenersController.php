@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Data\Tenant\Frontend\SelectOptions\GardenerOptionsData;
 use App\Data\Tenant\Frontend\Table\GardenerTableData;
 use App\Data\Tenant\Frontend\Widgets\PageTotalWidget;
 use App\Data\Tenant\Frontend\Widgets\PageWidgets;
@@ -17,20 +18,31 @@ class GardenersController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->query('pp', config('app.defaults.list_settings.per_page'));
-        $gardeners = Gardener::search($request->q)
-                     ->orderBy('id')
-                     ->query(fn(Builder $query) => $query->with([
-                         'plots',
-                         'contacts'
-                     ]))
-                     ->paginate($perPage)
-                     ->onEachSide(1)
-                     ->withQueryString();
+        $gardeners = Gardener::search($request->q)->orderBy('id')->query(fn(Builder $query) => $query->with([
+            'plots',
+            'contacts'
+        ]))->paginate($perPage)->onEachSide(1)->withQueryString();
 
         return Inertia::render('Tenant/Gardeners/List', [
             'gardeners' => GardenerTableData::from($gardeners),
             'total' => $this->buildTotalWidgets()
         ]);
+    }
+
+    public function options(Request $request)
+    {
+        $gardeners = Gardener::search($request->q)->query(fn(Builder $query) => $query->select([
+            'id',
+            'last_name',
+            'first_name',
+            'middle_name'
+        ]))->get()->pluck('name', 'id')->mapWithKeys(
+            function (string $item, int $key) {
+                return [$key => new GardenerOptionsData($key, $item)];
+            }
+        );
+
+        return response()->json($gardeners);
     }
 
     private function buildTotalWidgets()

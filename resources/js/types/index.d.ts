@@ -24,6 +24,7 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
   auth: {
     user: User;
   };
+  dadataToken: string;
   mainMenu: Array<SideMenu | string>;
   ziggy: Config & { location: string };
   listPageProps: ListPageProps;

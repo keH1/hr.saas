@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Data\Tenant\Frontend\SelectOptions\GardenerOptionsData;
+use App\Data\Tenant\Frontend\SelectOptions\StreetOptionsData;
 use App\Data\Tenant\Frontend\Table\PlotTableData;
-use App\Data\Tenant\Frontend\Table\TotalWidgetsData;
 use App\Data\Tenant\Frontend\Widgets\PageTotalWidget;
 use App\Data\Tenant\Frontend\Widgets\PageWidgets;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tenant\NewPlotRequest;
+use App\Models\Tenant\Gardener;
 use App\Models\Tenant\Plot;
+use App\Models\Tenant\Street;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +20,10 @@ use Inertia\Inertia;
 class PlotsController extends Controller
 {
 
+    /**
+     * GET /plots
+     * Отобразить список
+     */
     public function index(Request $request)
     {
         $perPage = $request->query('pp', config('app.defaults.list_settings.per_page'));
@@ -32,6 +40,91 @@ class PlotsController extends Controller
         ]);
     }
 
+    /**
+     * GET /plots/create
+     * Показать форму для создания
+     */
+    public function create()
+    {
+        return Inertia::render('Tenant/Plots/Add', [
+            'streets' => Street::pluck('name', 'id')->mapWithKeys(function (string $item, int $key) {
+                return [$key => new StreetOptionsData($key, $item)];
+            }),
+            'gardeners' => Gardener::limit(config('app.defaults.default_options_limit'))->select(
+                [
+                    'id',
+                    'last_name',
+                    'first_name',
+                    'middle_name'
+                ]
+            )->get()->pluck('name', 'id')->mapWithKeys(function (string $item, int $key) {
+                return [$key => new GardenerOptionsData($key, $item)];
+            })
+        ]);
+    }
+
+    /**
+     * POST /plots
+     * Сохранить новую запись в базе
+     */
+    public function store(NewPlotRequest $request)
+    {
+        $validatedData = $request->validated();
+        dump($validatedData);
+        dd($request->toArray());
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        Street::create($validated);
+
+        return redirect()->route('streets.index')->with('success', 'Улица создана!');
+    }
+
+    /**
+     * GET /plots/{plot}
+     * Показать детальную страницу
+     */
+    public function show(Plot $plot)
+    {
+        return Inertia::render('Tenant/Plots/Detail', []);
+    }
+
+    /**
+     * GET /plots/{plot}/edit
+     * Показать форму для редактирования
+     */
+    public function edit(Street $street)
+    {
+        return inertia('Streets/Edit', ['street' => $street]);
+    }
+
+    /**
+     * PUT/PATCH /plots/{plot}
+     * Обновить данные
+     */
+    public function update(Request $request, Street $street)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $street->update($validated);
+
+        return redirect()->route('streets.index')->with('success', 'Улица обновлена!');
+    }
+
+    /**
+     * DELETE /plots/{plot}
+     * Удалить
+     */
+    public function destroy(Street $street)
+    {
+        $street->delete();
+
+        return redirect()->route('streets.index')->with('success', 'Улица удалена!');
+    }
+
     private function buildTotalWidgets(): PageWidgets
     {
         $counts = DB::table('plots')
@@ -41,7 +134,11 @@ class PlotsController extends Controller
 
         return new PageWidgets([
             new PageTotalWidget(__('tenant/page_total_widgets.plots_total'), $counts->total_count),
-            new PageTotalWidget(__('tenant/page_total_widgets.total_plots_square'), number_format($counts->total_plots_square, 0, '', ' '), 'м²'),
+            new PageTotalWidget(
+                __('tenant/page_total_widgets.total_plots_square'),
+                number_format($counts->total_plots_square, 0, '', ' '),
+                'м²'
+            ),
         ]);
     }
 }

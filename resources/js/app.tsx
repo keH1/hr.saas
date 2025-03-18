@@ -7,8 +7,11 @@ import {createRoot, hydrateRoot} from 'react-dom/client';
 import {StrictMode} from "react";
 import {Provider} from "react-redux";
 import {store} from "@/Stores/store";
+import createCache from '@emotion/cache';
+import {CacheProvider} from '@emotion/react';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const cache = createCache({key: 'emotion', prepend: true});
 
 createInertiaApp({
   title: (title) => `${title} - ${appName}`,
@@ -26,7 +29,9 @@ createInertiaApp({
     createRoot(el).render(
       <StrictMode>
         <Provider store={store}>
-          <App {...props} />
+          <CacheProvider value={cache}>
+            <App {...props} />
+          </CacheProvider>
         </Provider>
       </StrictMode>
     );

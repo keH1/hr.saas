@@ -22,13 +22,14 @@ export default {
     theme: {
         container: {
             screens: {
-                "2xl": "1320px",
-                "3xl": "1600px",
+                "xl": "1320px",
+                "2xl": "1600px",
+                "3xl": "2180px",
             },
         },
         extend: {
             screens: {
-                "3xl": "1600px",
+                "3xl": "2180px",
             },
             colors: {
                 theme: {

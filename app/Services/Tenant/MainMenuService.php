@@ -20,7 +20,7 @@ class MainMenuService
             ],
             [
                 "icon" => "LandPlot",
-                "pathname" => route('plots.list'),
+                "pathname" => route('plots.index'),
                 "name" => "plots.*",
                 "title" => __('tenant/menu.plots'),
             ],
@@ -33,7 +33,7 @@ class MainMenuService
             "УПРАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯМИ",
             [
                 "icon" => "PackagePlus",
-                "pathname" => "/add-user",
+                "pathname" => route('plots.index'),
                 "name" => "dsdsg",
                 "title" => "Add User",
             ],

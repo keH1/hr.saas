@@ -3,15 +3,15 @@ import Litepicker from "litepicker";
 import { LitepickerElement, LitepickerProps } from "./index";
 
 const getDateFormat = (format: string | undefined) => {
-  return format !== undefined ? format : "D MMM, YYYY";
+  return format !== undefined ? format : "DD.MM.YYYY";
 };
 
 const setValue = (props: LitepickerProps) => {
-  const format = getDateFormat(props.options.format);
-  if (!props.value.length) {
+  const format = getDateFormat(props.options?.format);
+  if (!props.value?.length) {
     let date = dayjs().format(format);
     date +=
-      !props.options.singleMode && props.options.singleMode !== undefined
+      !props.options?.singleMode && props.options?.singleMode !== undefined
         ? " - " + dayjs().add(1, "month").format(format)
         : "";
     if (props.onChange) {
@@ -25,11 +25,12 @@ const setValue = (props: LitepickerProps) => {
 };
 
 const init = (el: LitepickerElement, props: LitepickerProps) => {
-  const format = getDateFormat(props.options.format);
+  const format = getDateFormat(props.options?.format);
   el.litePickerInstance = new Litepicker({
     ...props.options,
     element: el,
     format: format,
+    lang: "ru-RU",
     setup: (picker) => {
       if (picker.on) {
         picker.on("selected", (startDate, endDate) => {

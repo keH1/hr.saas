@@ -131,6 +131,9 @@ return [
                 50,
                 100,
             ],
-        ]
-    ]
+        ],
+        'default_options_limit' => env('APP_DEFAULT_OPTIONS_LIMIT', 10),
+    ],
+
+    'dadata_token' => env('DADATA_TOKEN', ''),
 ];

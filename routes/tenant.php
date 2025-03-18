@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Tenant\GardenersController;
+
 use App\Http\Controllers\Tenant\LogoutController;
-use App\Http\Controllers\Tenant\PlotsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Stancl\Tenancy\Features\UserImpersonation;
@@ -34,22 +32,14 @@ Route::middleware([
             return Inertia::render('Tenant/Dashboard');
         })->name('dashboard');
 
-        //Plots
-        Route::get('/plots', [PlotsController::class, 'index'])->name('plots.list');
-
-        //Gardeners
-        Route::get('/gardeners', [GardenersController::class, 'index'])->name('gardeners.list');
-
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
         Route::post('logout', [LogoutController::class, 'logout'])->name('logout');
+
+        require __DIR__.'/tenant/pages.php';
+        require __DIR__.'/tenant/ajax.php';
     });
 
     //Stable routes
     Route::get('/impersonate/{token}', function ($token) {
         return UserImpersonation::makeResponse($token);
     })->name('impersonate');
-
 });

@@ -28,11 +28,16 @@ class Gardener extends Model
     ];
 
     protected $hidden = ['pivot'];
-    protected $appends = ['ownership_percentage', 'primary_contact'];
+    protected $appends = ['ownership_percentage', 'primary_contact', 'name'];
 
     public function getOwnershipPercentageAttribute(): ?string
     {
         return $this->pivot ? $this->pivot->ownership_percentage : null;
+    }
+
+    public function getNameAttribute(): ?string
+    {
+        return "$this->last_name $this->first_name $this->middle_name";
     }
 
     public function getPrimaryContactAttribute(): ?Contact

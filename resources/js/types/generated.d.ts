@@ -48,6 +48,16 @@ declare namespace App.Data.Tenant.Frontend {
     active: boolean;
   };
 }
+declare namespace App.Data.Tenant.Frontend.SelectOptions {
+  export type GardenerOptions = {
+    value: number;
+    label: string;
+  };
+  export type StreetOptions = {
+    value: number;
+    label: string;
+  };
+}
 declare namespace App.Data.Tenant.Frontend.Table {
   export type Gardeners = {
     data: Array<App.Data.Tenant.Gardener> | null;
