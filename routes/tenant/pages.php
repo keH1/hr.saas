@@ -31,7 +31,3 @@ Route::post('/streets', [StreetsController::class, 'store'])->name('streets.stor
 Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-Route::group(['prefix' => 'ajax'], function () {
-    Route::get('/gardeners', [GardenersController::class, 'options'])->name('gardeners.options');
-});

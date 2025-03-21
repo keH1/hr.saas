@@ -125,6 +125,23 @@ class PlotsController extends Controller
         return redirect()->route('streets.index')->with('success', 'Улица удалена!');
     }
 
+    public function checkPlotExistence(Request $request)
+    {
+        $request->validate([
+            'plot_number' => 'required',
+            'street_id' => 'required',
+        ]);
+
+        $plotNumber = $request->input('plot_number');
+        $streetId = $request->input('street_id');
+
+        $exists = Plot::where('plot_number', $plotNumber)
+                      ->where('street_id', $streetId)
+                      ->exists();
+
+        return response()->json(['exists' => $exists]);
+    }
+
     private function buildTotalWidgets(): PageWidgets
     {
         $counts = DB::table('plots')

@@ -18,9 +18,11 @@ interface WizardProps {
   children: ReactNode;
   initialValues: any;
   onSubmit: (values: any, helpers: FormikHelpers<any>) => void;
+  validateOnChange?: boolean;
+  validateOnMount?: boolean;
 }
 
-export const Wizard: React.FC<WizardProps> = ({children, initialValues, onSubmit}) => {
+export const Wizard: React.FC<WizardProps> = ({children, initialValues, onSubmit, validateOnChange, validateOnMount}) => {
   const [stepNumber, setStepNumber] = useState<number>(0);
   const steps = React.Children.toArray(children) as React.ReactElement<WizardStepProps>[];
   const [snapshot, setSnapshot] = useState(initialValues);
@@ -86,7 +88,9 @@ export const Wizard: React.FC<WizardProps> = ({children, initialValues, onSubmit
           <div className="flex flex-col box box--stacked">
             <Formik initialValues={snapshot}
                     onSubmit={handleSubmit}
-                    validationSchema={step.props.validationSchema}>
+                    validationSchema={step.props.validationSchema}
+                    validateOnChange={validateOnChange}
+                    validateOnMount={validateOnMount}>
               {formik => (
                 <Form>
                   <div className="p-7">

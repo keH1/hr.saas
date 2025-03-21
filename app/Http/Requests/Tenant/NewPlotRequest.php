@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Tenant;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
 class NewPlotRequest extends FormRequest
@@ -16,7 +17,14 @@ class NewPlotRequest extends FormRequest
     {
         return [
             //Step 1
-            'plot_number' => ['required', 'string'],
+            'plot_number' => [
+                'required',
+                'string',
+                Rule::unique('plots', 'plot_number')
+                    ->where(function ($query) {
+                        return $query->where('street_id', $this->input('street.value'));
+                    }),
+            ],
             'street' => ['required', 'array'],
             'cadastre_number' => ['required', 'string'],
             'area' => ['required', 'numeric'],
@@ -160,6 +168,7 @@ class NewPlotRequest extends FormRequest
             'owners.*.membership_end_date.required' => 'Дата завершения членства обязательна.',
             'owners.*.ownership_percentage.min' => 'Доля не может быть меньше 0%.',
             'owners.*.ownership_percentage.max' => 'Доля не может быть больше 100%.',
+            'plot_number.unique' => 'Участок с таким номером уже существует на этой улице.',
         ];
     }
 }

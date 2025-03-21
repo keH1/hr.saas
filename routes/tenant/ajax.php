@@ -18,17 +18,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Plots
-Route::resource('plots', PlotsController::class);
-//        Route::get('/plots/{id}', [PlotsController::class, 'detail'])->where('id', '[0-9]+')->name('plots.detail');
-
-//Gardeners
-Route::get('/gardeners', [GardenersController::class, 'index'])->name('gardeners.list');
-
-//Streets
-Route::post('/streets', [StreetsController::class, 'store'])->name('streets.store');
-
-Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+Route::group(['prefix' => 'ajax'], function () {
+    Route::get('/gardeners/options', [GardenersController::class, 'options'])->name('gardeners.options');
+    Route::get('/plots/plot-existence', [PlotsController::class, 'checkPlotExistence'])->name('plots.check-existence');
+});
 

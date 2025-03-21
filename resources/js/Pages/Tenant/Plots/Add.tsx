@@ -64,7 +64,31 @@ export default function Add({initialValues}: AddProps) {
    * Validation rules
    */
   const firstStepValidationSchema = Yup.object({
-    plot_number: Yup.string().required('Обязательно для заполнения'),
+    plot_number: Yup.string().required('Обязательно для заполнения').test(
+      'unique-plot-street',
+      'Участок с таким номером уже существует на этой улице',
+      async function (value) {
+        // Если номер участка или улица не указаны, не выполняем проверку
+        if (!value || !this.parent.street || !this.parent.street.value) {
+          return true;
+        }
+
+        try {
+          const response = await axios.get(route('plots.check-existence'), {
+            params: {
+              plot_number: value,
+              street_id: this.parent.street.value
+            }
+          });
+
+          // Если участок существует, возвращаем false (что вызовет ошибку валидации)
+          return !response.data.exists;
+        } catch (error) {
+          console.error('Ошибка при проверке уникальности участка:', error);
+          return true;
+        }
+      }
+    ),
     street: Yup.object({}).required('Обязательно для заполнения'),
     cadastre_number: Yup.string().required('Обязательно для заполнения'),
     area: Yup.string().required('Обязательно для заполнения'),
@@ -195,6 +219,7 @@ export default function Add({initialValues}: AddProps) {
           const valid = owners.every(
             (owner) =>
               owner.ownership_percentage !== null &&
+              owner.ownership_percentage !== undefined &&
               String(owner.ownership_percentage).trim() !== ''
           );
           if (!valid) {
@@ -211,6 +236,17 @@ export default function Add({initialValues}: AddProps) {
         'Суммарная доля не должна превышать 100%',
         function (owners) {
           if (!owners) return true;
+
+          // Сначала проверяем, что все доли заполнены
+          const allFilled = owners.length <= 1 || owners.every(
+            owner => owner.ownership_percentage !== null &&
+              owner.ownership_percentage !== undefined &&
+              String(owner.ownership_percentage).trim() !== ''
+          );
+
+          // Если не все заполнены, пропускаем проверку суммы - сработает предыдущий тест
+          if (!allFilled) return true;
+
           const sum = owners.reduce(
             (acc, owner) => acc + Number(owner.ownership_percentage || 0),
             0
@@ -243,7 +279,7 @@ export default function Add({initialValues}: AddProps) {
       <Wizard initialValues={initialValues}
               onSubmit={handleFormSubmit}>
         <WizardStep name={'Информация о участке'}
-                    /*validationSchema={firstStepValidationSchema}*/>
+                    validationSchema={firstStepValidationSchema}>
           <MainInfoStep />
         </WizardStep>
         <WizardStep name={'Информация о владельце'}
@@ -264,7 +300,7 @@ export default function Add({initialValues}: AddProps) {
                         Добавить владельца
                       </Button>
                     )}
-                    /*validationSchema={secondStepValidationSchema}*/>
+                    validationSchema={secondStepValidationSchema}>
           <GardenerInfo />
         </WizardStep>
       </Wizard>
@@ -475,8 +511,8 @@ function GardenerInfo() {
     500
   ), []);
   // console.log('Values', formik.values);
-  // console.log('Errors', formik.errors);
-  // console.log('Touched', formik.touched);
+  console.log('Errors', formik.errors);
+  console.log('Touched', formik.touched);
 
   return (
     <FieldArray name="owners">
@@ -519,7 +555,7 @@ function GardenerInfo() {
                                    value={formik.values.owners[index].gardenerId}
                                    hasError={!!(
                                      (get(formik.touched, `owners[${index}].gardenerId`) &&
-                                     get(formik.errors, `owners[${index}].gardenerId`)) || get(errors, `owners.${index}.gardenerId`)
+                                       get(formik.errors, `owners[${index}].gardenerId`)) || get(errors, `owners.${index}.gardenerId`)
                                    )}
                       />
                     </div>
@@ -1022,7 +1058,7 @@ function GardenerInfo() {
                           type="text"
                           name={`owners[${index}].ownership_percentage`}
                           className={clsx({
-                            "!border-danger": (get(formik.touched, `owners[${index}].ownership_percentage`) && formik.errors.owners_share) || get(errors, `owners.${index}.ownership_percentage`) || get(errors, `owners_share`),
+                            "!border-danger": get(formik.touched, `owners[${index}].ownership_percentage`) && formik.errors.owners_share,
                           })}
                           value={formik.values.owners[index].ownership_percentage}
                           onChange={formik.handleChange}
@@ -1034,11 +1070,9 @@ function GardenerInfo() {
                           %
                         </InputGroup.Text>
                       </InputGroup>
-                      {(((get(formik.touched, `owners[${index}].ownership_percentage`) && formik.errors.owners_share) || get(errors, `owners.${index}.ownership_percentage`) || get(errors, `owners_share`))) && (
+                      {get(formik.touched, `owners[${index}].ownership_percentage`) && formik.errors.owners_share && (
                         <div className="mt-2 text-danger">
-                          {get(formik.errors, `owners[${index}].ownership_percentage`) && (`${get(formik.errors, `owners[${index}].ownership_percentage`)}`)}
-                          {get(errors, `owners.${index}.ownership_percentage`) && (`${get(errors, `owners.${index}.ownership_percentage`)}`)}
-                          {get(errors, `owners_share`) && (`${get(errors, `owners_share`)}`)}
+                          {`${formik.errors.owners_share}`}
                         </div>
                       )}
                     </div>
