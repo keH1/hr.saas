@@ -8,9 +8,9 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('gardeners', function (Blueprint $table) {
-            $table->string('registration_address')->after('middle_name');
+            $table->string('registration_address')->nullable()->after('middle_name');
             $table->string('residence_address')->nullable()->change();
-            $table->string('gender')->after('membership_end_date');
+            $table->string('gender')->nullable()->after('membership_end_date');
         });
     }
 };

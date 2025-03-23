@@ -17,10 +17,13 @@ class GardenerData extends Data
         public readonly string $last_name,
         public readonly string $first_name,
         public readonly ?string $middle_name,
-        public readonly string $residence_address,
+        public readonly ?string $registration_address,
+        public readonly ?string $residence_address,
         public readonly ?string $mailing_address,
         public readonly bool $is_member,
+        #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d')]
         public readonly ?CarbonImmutable $membership_start_date,
+        #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d')]
         public readonly ?CarbonImmutable $membership_end_date,
         public readonly bool $archived,
         public readonly ?float $ownership_percentage,

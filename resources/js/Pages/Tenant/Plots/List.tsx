@@ -85,7 +85,7 @@ export default function List({plots, total}: PlotsList) {
                         </div>
                         <div className="ml-3.5">
                           <Link
-                            href={route('plots.edit', plot.id)}
+                            href={route('plots.show', plot.id)}
                             className="font-medium whitespace-nowrap"
                           >
                             {plot.owners && plot.owners.length > 0 && (

@@ -122,7 +122,7 @@ export const Wizard: React.FC<WizardProps> = ({children, initialValues, onSubmit
                         className="w-full px-10 md:w-auto border-primary/50 ml-auto"
                         type="submit"
                       >
-                        {formik.isSubmitting ? (
+                        {formik.isSubmitting || formik.isValidating ? (
                           <LoadingIcon icon="oval" color="#03045e" className="stroke-[1.3] w-4 h-4 mr-2 -ml-2" />
                         ) : (
                           <Lucide

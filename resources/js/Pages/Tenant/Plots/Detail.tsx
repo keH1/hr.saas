@@ -15,7 +15,7 @@ import PageWidgets = App.Data.Tenant.Frontend.Widgets.PageWidgets;
 export default function Detail() {
   return (
     <AppLayout>
-      <Head title="Добавлене участка" />
+      <Head title="Участок номер ХУЙ" />
 
       аыпыпыпывп
 

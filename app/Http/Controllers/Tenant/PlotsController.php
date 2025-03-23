@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Data\Tenant\Forms\PlotCreateData;
 use App\Data\Tenant\Frontend\SelectOptions\GardenerOptionsData;
 use App\Data\Tenant\Frontend\SelectOptions\StreetOptionsData;
 use App\Data\Tenant\Frontend\Table\PlotTableData;
@@ -12,6 +13,7 @@ use App\Http\Requests\Tenant\NewPlotRequest;
 use App\Models\Tenant\Gardener;
 use App\Models\Tenant\Plot;
 use App\Models\Tenant\Street;
+use App\Repositories\Tenant\PlotRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -67,18 +69,13 @@ class PlotsController extends Controller
      * POST /plots
      * Сохранить новую запись в базе
      */
-    public function store(NewPlotRequest $request)
+    public function store(NewPlotRequest $request, PlotRepository $plotRepository)
     {
         $validatedData = $request->validated();
-        dump($validatedData);
-        dd($request->toArray());
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
+        $plotData = PlotCreateData::fromRequest($validatedData);
+        $plot = $plotRepository->create($plotData);
 
-        Street::create($validated);
-
-        return redirect()->route('streets.index')->with('success', 'Улица создана!');
+        return redirect()->route('plots.show', ['plot' => $plot->id])->with('success', 'Участок успешно создан!');
     }
 
     /**
