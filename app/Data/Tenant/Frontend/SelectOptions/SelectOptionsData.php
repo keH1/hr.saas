@@ -8,7 +8,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 abstract class SelectOptionsData extends Data
 {
     public function __construct(
-        public readonly int $value,
+        public readonly int|string $value,
         public readonly string $label,
     ) {
     }

@@ -32,7 +32,7 @@ export default function List({gardeners, total}: GardenersList) {
             <div className="flex flex-col sm:flex-row gap-x-3 gap-y-2 md:ml-auto">
               <Button
                 as={Link}
-                href={route('dashboard')}
+                href={route('gardeners.create')}
                 variant="primary"
                 className="group-[.mode--light]:!bg-white/[0.12] group-[.mode--light]:!text-slate-200 group-[.mode--light]:!border-transparent"
               >
@@ -80,7 +80,7 @@ export default function List({gardeners, total}: GardenersList) {
                         </div>
                         <div className="ml-3.5">
                           <Link
-                            href={route('dashboard', gardener.id)}
+                            href={route('gardeners.show', gardener.id)}
                             className="font-medium whitespace-nowrap"
                           >
                             {gardener.last_name} {gardener.first_name} {gardener.middle_name}

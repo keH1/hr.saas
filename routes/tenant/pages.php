@@ -20,10 +20,10 @@ use Illuminate\Support\Facades\Route;
 
 //Plots
 Route::resource('plots', PlotsController::class);
-//        Route::get('/plots/{id}', [PlotsController::class, 'detail'])->where('id', '[0-9]+')->name('plots.detail');
 
 //Gardeners
-Route::get('/gardeners', [GardenersController::class, 'index'])->name('gardeners.list');
+Route::resource('gardeners', GardenersController::class);
+//Route::get('/gardeners', [GardenersController::class, 'index'])->name('gardeners.list');
 
 //Streets
 Route::post('/streets', [StreetsController::class, 'store'])->name('streets.store');

@@ -15,6 +15,12 @@ const cutText = (text: string, length: number) => {
   }
 };
 
+const generateCryptoRandomString = (length: number) => {
+  const array = new Uint8Array(length);
+  window.crypto.getRandomValues(array);
+  return Array.from(array, dec => ('0' + dec.toString(16))).join('');
+}
+
 const formatDate = (date: string, format: string) => {
   return dayjs(date).format(format);
 };
@@ -202,6 +208,7 @@ const slideDown = (
 export {
   cutText,
   formatDate,
+  generateCryptoRandomString,
   capitalizeFirstLetter,
   onlyNumber,
   formatCurrency,

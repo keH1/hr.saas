@@ -7,6 +7,8 @@ import FormLabel from "./FormLabel";
 import FormSelect from "./FormSelect";
 import FormSwitch from "./FormSwitch";
 import InputGroup from "./InputGroup";
+import FormErrorMessage from "./FormErrorMessage";
+import FormMaskedInput from "./FormMaskedInput";
 
 export {
   FormCheck,
@@ -18,4 +20,6 @@ export {
   FormSelect,
   FormSwitch,
   InputGroup,
+  FormErrorMessage,
+  FormMaskedInput
 };

@@ -12,7 +12,8 @@ declare namespace App.Data.Tenant {
     last_name: string;
     first_name: string;
     middle_name: string | null;
-    residence_address: string;
+    registration_address: string | null;
+    residence_address: string | null;
     mailing_address: string | null;
     is_member: boolean;
     membership_start_date: string | null;
@@ -49,12 +50,20 @@ declare namespace App.Data.Tenant.Frontend {
   };
 }
 declare namespace App.Data.Tenant.Frontend.SelectOptions {
+  export type ContactLabelsOptions = {
+    value: string | number;
+    label: string;
+  };
   export type GardenerOptions = {
-    value: number;
+    value: string | number;
+    label: string;
+  };
+  export type PlotsOptions = {
+    value: string | number;
     label: string;
   };
   export type StreetOptions = {
-    value: number;
+    value: string | number;
     label: string;
   };
 }

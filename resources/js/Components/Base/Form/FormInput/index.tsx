@@ -3,7 +3,7 @@ import { formInlineContext } from "../FormInline";
 import { inputGroupContext } from "../InputGroup";
 import { twMerge } from "tailwind-merge";
 
-interface FormInputProps extends React.ComponentPropsWithoutRef<"input"> {
+export interface FormInputProps extends React.ComponentPropsWithoutRef<"input"> {
   formInputSize?: "sm" | "lg";
   rounded?: boolean;
 }

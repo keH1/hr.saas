@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Contracts\TotalWidgetsProviderInterface;
 use App\Data\Tenant\Forms\PlotCreateData;
 use App\Data\Tenant\Frontend\SelectOptions\GardenerOptionsData;
 use App\Data\Tenant\Frontend\SelectOptions\StreetOptionsData;
@@ -19,7 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
-class PlotsController extends Controller
+class PlotsController extends Controller implements TotalWidgetsProviderInterface
 {
 
     /**
@@ -139,7 +140,7 @@ class PlotsController extends Controller
         return response()->json(['exists' => $exists]);
     }
 
-    private function buildTotalWidgets(): PageWidgets
+    public function buildTotalWidgets(): PageWidgets
     {
         $counts = DB::table('plots')
                     ->selectRaw('SUM(area) as total_plots_square')
